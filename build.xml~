@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="dummylandapp" default="audit" basedir="."
+    xmlns:ivy="antlib:org.apache.ivy.ant"
+	xmlns:antcontrib="antlib:net.sf.antcontrib">
+
+	<!--
+	-->
+	
+	<!-- 
+		6/6/2013
+		In Jenkins it is possible to check out code from 1+ repos. You should have the following repos:
+				appfoundry/
+				approfundry-build-qa/
+					build-qa.xml
+				approfundry-build-demo/
+					build-demo.xml
+				approfundry-build-canary/
+					build-canary.xml
+				approfundry-build-live/
+					build-live.xml
+					
+		Configure each build (appfoundry-DEMO, appfoundry-CANARY, etc.) to check out from the trunk/ of a different build repo
+		Then you just need to figure out how to execute build-<env>.xml#package instead of build.xml#package, etc.
+	
+	
+		THIS FOLLOWING ENTRY MIGHT BE OLD/OBSOLETE:
+		The main problem with this build is that, for whatever reason, the instance of Ant that ships with
+		Eclipse is not getting exported system (environment) variables.
+		
+		When you run Ant from the command line (shell), it has access to .bashrc exported vars.
+		
+		When you run Ant from inside Eclipse (java), it only has access to /etc/environment exported vars.
+		However, for some reason, defining vars in /etc/environment is still not working. Probably a permission
+		issue, as you have to sudo into /etc/environment to make changes to the file, and Eclipse is probably
+		running as zharvey (non-root) user.
+		
+		Might be possible to just change permissions or ownership of /etc/environment to get this working.
+	
+	-->
+
+    <!-- 
+    ///////////////////////////////////////////////////////////
+    						IMPORTS
+    ///////////////////////////////////////////////////////////
+     -->
+    <!-- Import build.properties -->
+    <property file="build.properties"/>
+    
+    <!-- Declare environment identifier. -->
+    <property environment="env"/>
+    
+    <!-- Ant home. -->
+    <property name="ant.home.lib" value="${env.ANT_HOME}/lib"/>
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////
+    				      REUSABLE PATHS
+    ///////////////////////////////////////////////////////////
+     -->
+    <!-- Sourcepath for main Java source. -->
+    <path id="src.path">
+        <fileset dir="${src.main.java.dir}">
+            <include name="**.*java"/>
+        </fileset>
+    </path>
+    
+    <!-- Sourcepath for test Java source. -->
+    <path id="test.path">
+        <fileset dir="${src.test.java.dir}">
+            <include name="**.*java"/>
+        </fileset>
+    </path>
+    
+    <!-- Path for main Java dependencies. -->
+    <path id="lib.main.path">
+        <fileset dir="${gen.lib.main.dir}">
+            <include name="**.*jar"/>
+        </fileset>
+    </path>
+    
+    <!-- Path for test Java dependencies. -->
+    <path id="lib.test.path">
+        <fileset dir="${gen.lib.test.dir}">
+            <include name="**.*jar"/>
+        </fileset>
+    </path>
+
+    <!-- ANT PLUGINS -->
+	<!-- JUnit classpath. -->
+	<path id="junit.class.path">
+	    <fileset dir="${gen.lib.main.dir}" includes="*.jar"/>
+	    <fileset dir="${gen.lib.test.dir}" includes="*.jar"/>
+	    <pathelement location="${gen.bin.main.dir}"/>
+	    <pathelement location="${gen.bin.test.dir}"/>
+	</path>
+	
+	<path id="src.main.bin.path">
+		<pathelement location="${gen.bin.main.dir}" />
+	</path>
+	
+   	<!-- Build path. -->
+   	<path id="build.path">
+   	    <fileset dir="${lib.buildtime.dir}" includes="**/*.jar"/>
+   	</path>
+		
+    <!-- Main compile path. -->
+	<path id="main.compile.path">
+	    <path refid="src.path"/>
+	    <path refid="lib.main.path"/>
+		<fileset dir="${gen.lib.buildtime.dir}" includes="**/*.jar"/>
+	</path>
+
+    <!-- Test compile path. -->
+	<path id="test.compile.path">
+	    <path refid="test.path"/>
+	    <path refid="src.main.bin.path"/>
+	    <path refid="lib.main.path"/>
+	    <path refid="lib.test.path"/>
+	</path>
+
+	<!-- GWT classpath. Used by devmode and gwtc targets. -->
+	<path id="gwt.path">
+		<pathelement location="${gen.bin.main.dir}"/>
+		<pathelement location="${gen.lib.buildtime.dir}/gwt-user-2.5.1.jar"/>
+		<pathelement location="${gen.lib.buildtime.dir}/gwt-dev-2.5.1.jar" />
+		<pathelement location="${gen.lib.buildtime.dir}/javax-validation-api-1.0.0.jar" />
+		<pathelement location="${gen.lib.buildtime.dir}/javax-validation-api-sources-1.0.0.jar" />
+		<fileset dir="${gen.lib.main.dir}" includes="**/*.jar"/>
+	</path>
+		
+		
+    <!-- 
+    ///////////////////////////////////////////////////////////
+    				          TASKDEFS
+    ///////////////////////////////////////////////////////////
+     -->
+    <!-- TODO: Probably don't need anymore for new bootstrapping build... -->
+
+	
+	
+    <!-- 
+    ///////////////////////////////////////////////////////////
+    				         TARGETS
+    ///////////////////////////////////////////////////////////
+    -->
+	<!--
+		Initialize the Ant build by making Ivy available to the classpath
+		and defining tasks for all Ant plugins.
+	-->
+	<target name="bootstrap">
+		<taskdef resource="org/apache/ivy/ant/antlib.xml"
+		    uri="antlib:org.apache.ivy.ant" classpathref="build.path"/>
+	</target>
+	
+	<!--
+		Delete the gen/ directory, if it exists. This wipes the slate clean for the
+		current build and gets rid of old artifacts from previous builds.
+	-->
+	<target name="clean" depends="bootstrap">
+	    <echo message="Deleting ${gen.dir} and all its contents from the previous build."/>
+	    <delete dir="${gen.dir}" quiet="true"/>
+	</target>
+	
+	<!-- Make the entire gen/ subdirectory structure for the current build. -->
+	<target name="install" depends="clean">
+	    <echo message="Creating ${gen.dir} and its subdirectory structure for the current build."/>
+	    <mkdir dir="${gen.dir}"/>
+	    <mkdir dir="${gen.lib.dir}"/>
+		<mkdir dir="${gen.dist.dir}"/>
+		<mkdir dir="${gen.bin.dir}"/>
+		<mkdir dir="${gen.audits.dir}"/>
+		<mkdir dir="${gen.staging.dir}"/>
+		<mkdir dir="${gen.staging.deploy.dir}"/>
+		<mkdir dir="${war.dir}"/>
+		<mkdir dir="${war.webinf.dir}"/>
+		<mkdir dir="${war.hosts.dir}"/>
+		<mkdir dir="${war.webinf.lib.dir}"/>
+		<mkdir dir="${war.webinf.classes.dir}"/>
+		<mkdir dir="${gen.lib.main.dir}"/>
+		<mkdir dir="${gen.lib.test.dir}"/>
+		<mkdir dir="${gen.lib.buildtime.dir}"/>
+		<mkdir dir="${gen.bin.main.dir}"/>
+		<mkdir dir="${gen.bin.test.dir}"/>
+		<mkdir dir="${gen.audits.junit.dir}"/>
+		<mkdir dir="${gen.audits.selenium.dir}"/>
+		<mkdir dir="${gen.audits.soyc.dir}"/>
+		
+		<!-- Copy the favicon over for devmode. -->
+		<copy file="${res.dir}/favicon.ico" todir="${war.dir}" />
+		
+		<!-- Copy images over to the WAR root. -->
+		<copy todir="${war.dir}">
+			<fileset dir="${res.dir}/img" includes="**/*" />
+		</copy>
+		
+		<!-- Copy all host pages (and their stylesheets) to war dir. -->
+		<copy todir="${war.hosts.dir}">
+			<fileset dir="${src.main.config.dir}/hosts" />
+		</copy>
+		
+		<!-- Necessary so that the WebModule can be loaded out of the WAR root dir. -->
+		<move file="${war.hosts.dir}/webmodule/index.html" todir="${war.dir}" />
+		
+		<!-- 
+			Copy all config files and resources into their appropriate (environment-specific)
+			locations.
+		-->
+<!--		<copy file="${src.main.config.dir}/logback/logback-${build.env}.xml"
+				tofile="${src.main.config.dir}/logback/logback.xml"
+				overwrite="true"/>
+	-->	
+	</target>
+	
+	<!-- Use Ivy tasks to resolve and retrieve dependencies into the gen/lib/* directories. -->
+	<target name="resolve-local" depends="install">
+	    <!-- Initialize Ivy and connect to host repository. -->
+	    <echo message="Initializing Apache Ivy and connecting to the host repository."/>
+	    <echo message="URL is: ${ivy.settings.home}"/>
+	    <ivy:settings url="${ivy.settings.home}"/>
+	    
+	    <!-- Clear/flush the Ivy cache. -->
+	    <echo message="Cleaning the local Ivy cache for the current build."/>
+	    <ivy:cleancache/>
+	    
+	    <!-- Resolve ivy.xml against the standard repository (all configurations) -->
+	    <echo message="Resolving ivy.xml dependencies against the host repository."/>
+	    <ivy:resolve file="${ivy.xml}"/>
+	    
+	    <!-- Retrieve main dependencies from local Ivy cache and place them into the gen/lib/main. -->
+	    <echo message="Retrieving main dependencies."/>
+	    <ivy:retrieve pattern="${gen.lib.main.dir}/[artifact]-[revision].[ext]" conf="main"/>
+		<copy todir="${lib.main.dir}">
+			<fileset dir="${gen.lib.main.dir}" />
+		</copy>
+	    
+	    <!-- Retrieve test dependencies from local Ivy cache and place them into the gen/lib/test. -->
+	    <echo message="Retrieving testing dependencies."/>
+	    <ivy:retrieve pattern="${gen.lib.test.dir}/[artifact]-[revision].[ext]" conf="test"/>
+		<copy todir="${lib.test.dir}">
+			<fileset dir="${gen.lib.test.dir}" />
+		</copy>
+	    
+	    <!-- Retrieve buildtime dependencies from local Ivy cache and place them into the gen/lib/buildtime. -->
+	    <echo message="Retrieving buildtime dependencies."/>
+	    <ivy:retrieve pattern="${gen.lib.buildtime.dir}/[artifact]-[revision].[ext]" conf="buildtime"/>
+		<copy todir="${lib.buildtime.dir}">
+			<fileset dir="${gen.lib.buildtime.dir}" />
+		</copy>
+		
+		<ivy:report todir="${gen.staging.dir}" />
+		
+		<ivy:cachepath pathid="build.path" conf="buildtime"/>
+	</target>
+	
+	<target name="resolve-remote" depends="install">
+		<echo message="Copying dependencies from lib dirs to the generated dirs." />
+		
+		<copy todir="${gen.lib.main.dir}">
+			<fileset dir="${lib.main.dir}" />
+		</copy>
+		<copy todir="${gen.lib.test.dir}">
+			<fileset dir="${lib.test.dir}" />
+		</copy>
+		<copy todir="${gen.lib.buildtime.dir}">
+			<fileset dir="${lib.buildtime.dir}" />
+		</copy>
+	</target>
+	
+	<target name="taskdefs">
+		<antcall target="resolve-${build.mode}" />
+		
+<!--		<taskdef resource="/net/sf/antcontrib/antlib.xml"
+		    uri="antlib:net.sf.antcontrib" classpathref="build.path"/>
+	-->
+		<taskdef uri="antlib:net.sf.antcontrib" classpathref="build.path"/>
+	</target>
+	
+	<!--
+		Compile main Java sources into gen/bin/main; then cross-compile these binaries into JavaScript.
+	-->
+	<target name="main-compile" depends="taskdefs">
+	    <echo message="Compiling main Java sources."/>
+	    <javac includeantruntime="false" srcdir="${src.main.java.dir}"
+	    		destdir="${gen.bin.main.dir}" debug="on">
+	        <classpath refid="main.compile.path"/>
+	    </javac>
+	</target>
+	
+	<!-- GWTC -->
+	<target name="gwtc">
+		<property name="build.env" value="local" />
+		<property name="build.mode" value="local" />
+		<property name="lib.root.dir" value="${gen.lib.main.dir}" />
+
+		<antcall target="main-compile" />
+		
+		<echo message="Running the GWT JavaScript cross-compiler."/>
+
+		<java failonerror="true" fork="true" classname="com.google.gwt.dev.Compiler">
+			<classpath>
+				<pathelement location="src"/>
+				<path refid="gwt.path"/>
+			</classpath>
+
+			<!-- Provision GWT Compiler with necessary memory. -->
+ 			<jvmarg value="-Xmx256M"/>
+
+			<arg line="-war"/>
+			<arg value="${war.dir}" />
+
+			<!-- Command-line arguments to the GWT Compiler. -->
+			<!-- Log everything for debugging & auditing purposes. -->
+ 			<arg line="-logLevel"/>
+ 			<arg value="ALL"/>		<!-- Change this before you deploy-live!!!!!!!!!!!!!!!!!! -->
+
+			<!-- Maximize JavaScript optimization (range is [0,9]). -->
+ 			<arg line="-optimize"/>
+ 			<arg value="9"/>
+
+ 			<arg line="-extra"/>
+ 			<arg value="${gen.staging.dir}"/>
+
+			<!-- Generate a Story of Your Compile (SOYC) report for auditing purposes. -->
+ 			<arg line="-compileReport"/>
+			
+			<!-- Specify the GWT Modules to compile -->
+			<arg value="com.dummylandapp.WebModule"/>
+ 		</java>
+	</target>
+	    
+	<!-- Compile test Java sources into gen/bin/test. -->
+	<target name="test-compile" depends="gwtc">
+	    <echo message="Compiling test Java sources."/>
+	    <javac includeantruntime="false" srcdir="${src.test.java.dir}" destdir="${gen.bin.test.dir}">
+	        <classpath refid="test.compile.path"/>
+	    </javac>
+	</target>
+	
+	<!-- Run automated testing and a gamut of other code quality reports; audit the code. -->
+	<!-- If an individual audit component fails, the entire build fails fast. -->
+	<target name="audit" depends="test-compile">
+	    <echo message="Commencing code audit."/>
+	    <!-- Various JUnit tests. -->
+	    <antcall target="run-junit"/>
+	    
+	    <!-- Functionality/UI (Selenium WebDrive) tests. -->
+	    <antcall target="run-selenium"/>
+
+	    <!-- ZIP up the final report. -->
+	    <echo message="Packaging code audit."/>
+		<zip destfile="${gen.dist.dir}/code-audit.zip"
+			basedir="${gen.audits.dir}" update="true"/>
+	</target>
+	
+	<!-- Run all JUnit tests (unit, integration, regression, security). -->
+	<target name="run-junit">
+	    <echo message="Conducting unit tests with JUnit."/>
+		<junit printsummary="yes" haltonerror="yes" haltonfailure="yes">
+		    <classpath refid="junit.class.path"/>
+		
+			<formatter type="xml"/>
+			
+			<batchtest todir="${gen.audits.junit.dir}">
+				<fileset dir="${src.test.java.dir}">
+					<include name="**/*Test*.java"/>
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+	
+	<!-- Run all Selenium/WebDrive functionality/UI tests. -->
+	<target name="run-selenium">
+	    <echo message="Conducting functionality and UI tests with Selenium WebDriver."/>
+	</target>
+	
+	<!-- Package the compiled binary into a deployment unit (WAR) and place it in gen/dist. -->
+	<target name="package" depends="audit">
+	    <echo message="Packaging WAR file."/>
+	    
+	    <!-- Clean war/WEB-INF/lib. -->
+		<delete includeemptydirs="true">  
+			<fileset dir="${war.webinf.lib.dir}" includes="**/*"/>  
+		</delete>  
+
+	     <!-- Copy gen/lib/main to war/WEB-INF/lib and overwrite if necessary. -->
+		<copy todir="${war.webinf.lib.dir}" overwrite="true">
+		    <fileset dir="${lib.root.dir}" includes="**/*.jar" excludes="servlet-api-*.jar,mail-*.jar"/>
+		</copy>
+		
+	    <!-- Clean war/WEB-INF/classes. -->
+		<delete includeemptydirs="true">
+			<fileset dir="${war.webinf.classes.dir}" includes="**/*"/>
+		</delete>  
+		
+		<!-- Copy all Java main binaries to war/WEB-INF/classes -->
+		<copy todir="${war.webinf.classes.dir}" overwrite="true">
+		    <fileset dir="${gen.bin.main.dir}" includes="**/*"/>
+		</copy>
+		
+		<!-- Remove after you implement slf4j-mako. -->
+		<copy file="${src.main.config.dir}/logging/simplelogger.properties"
+				todir="${war.webinf.classes.dir}" overwrite="true" />
+		
+		<!-- Copy all resources/configs to war/WEB-INF/classes. -->
+<!--		<copy file="${src.main.config.dir}/logback/logback.xml" todir="${war.webinf.classes.dir}" overwrite="true" />
+	-->
+		
+		<!-- Copy web.xml to war/WEB-INF. -->
+		<copy file="${src.main.config.dir}/web/web.xml" todir="${war.webinf.dir}" />
+
+		<!--
+			Thanks to the GWT Compiler, the rest of our WAR directory structure is already
+			good to go. Zip it.
+		-->
+		<zip destfile="${gen.staging.dir}/${deployable.name}" basedir="${war.dir}" />
+		<copy file="${gen.staging.dir}/${deployable.name}" todir="${gen.dist.dir}" />
+	</target>
+	
+	<target name="deploy" depends="package">
+		<copy file="${gen.dist.dir}/${deployable.name}"
+				todir="${gen.staging.deploy.dir}" />
+	</target>
+	
+	
+    <!-- 
+    ///////////////////////////////////////////////////////////
+    				   DEPLOY & RUN TARGETS
+    ///////////////////////////////////////////////////////////
+    -->
+	<target name="deploy-local">
+		<property name="build.env" value="local" />
+		<property name="build.mode" value="local" />
+		<property name="lib.root.dir" value="${gen.lib.main.dir}" />
+		
+		<!--
+			Copy context.xml out to ${TOMCAT_HOME}/conf. This only works on our local
+			Tomcat instance because CloudBees Tomcat instances don't support context.xml,
+			and our local Tomcat instance doesn't support cloudbees-web.xml!
+		-->
+<!--		<copy file="${src.main.config.dir}/tomcat/context/context-local.xml"
+				tofile="/home/zharvey/sandbox/dsi/workbench/tomcat/6.0.32/apache-tomcat-6.0.32/conf/context.xml"
+				overwrite="true" />
+	-->	
+		<antcall target="deploy" />
+	</target>
+	
+	<!--
+	
+		DevMode is failing because your WAR/ directory is not correct.
+	
+	-->
+	<target name="devmode">
+		<property name="build.env" value="local" />
+		<property name="build.mode" value="local" />
+		<property name="lib.root.dir" value="${gen.lib.main.dir}" />
+
+		<!-- used to be package... -->
+		<antcall target="main-compile" />
+		
+	    <!-- Clean war/WEB-INF/lib. -->
+		<delete includeemptydirs="true">  
+			<fileset dir="${war.webinf.lib.dir}" includes="**/*"/>  
+		</delete>  
+
+	     <!-- Copy gen/lib/main to war/WEB-INF/lib and overwrite if necessary. -->
+		<copy todir="${war.webinf.lib.dir}" overwrite="true">
+		    <fileset dir="${lib.root.dir}" includes="**/*.jar" excludes="servlet-api-*.jar,mail-*.jar"/>
+		</copy>
+		
+	    <!-- Clean war/WEB-INF/classes. -->
+		<delete includeemptydirs="true">
+			<fileset dir="${war.webinf.classes.dir}" includes="**/*"/>
+		</delete>  
+		
+		<!-- Copy all Java main binaries to war/WEB-INF/classes -->
+		<copy todir="${war.webinf.classes.dir}" overwrite="true">
+		    <fileset dir="${gen.bin.main.dir}" includes="**/*"/>
+		</copy>
+		
+		<!-- Copy web.xml to war/WEB-INF. -->
+		<copy file="${src.main.config.dir}/web/web.xml" todir="${war.webinf.dir}" />
+
+		<java failonerror="true" fork="true" classname="com.google.gwt.dev.DevMode">
+			<classpath>
+				<pathelement location="src"/>
+				<path refid="gwt.path"/>
+			</classpath>
+			
+			<jvmarg value="-Xmx256M" />
+			
+			<!-- Same as what web.xml#welcome-file-list does in Production Mode. -->
+			<arg value="-startupUrl" />
+			<arg value="index.html"/>
+			
+			<arg line="-war" />
+			<arg value="${war.dir}" />
+			
+			<!-- Additional arguments like -style PRETTY or -logLevel DEBUG -->
+			<arg value="-logLevel" />
+			<arg value="SPAM" />
+		
+			<arg value="com.dummylandapp.WebModule"/>
+		</java>
+	</target>
+	
+	<target name="debug-local" depends="deploy-local">
+		<echo message="Debugging ${deployable.name} locally on CloudBees debug container (beesd)." />
+		
+		<!-- https://developer.cloudbees.com/bin/view/RUN/BeesSDK -->
+		<!-- beesd app:run -e LOCAL -p 8082 gen/staging/deploy/dummylandapp.war -->
+		<exec executable="/bin/bash">
+			<arg value="beesd app:run"/>
+
+ 			<arg line="-e"/>
+ 			<arg value="LOCAL"/>
+
+			<arg line="-p"/>
+ 			<arg value="8082"/>
+			
+ 			<arg value="${gen.staging.deploy.dir}/${deployable.name}"/>
+		</exec>
+	</target>
+	
+	<target name="deploy-demo">
+		<property name="build.env" value="demo" />
+		<property name="build.mode" value="remote" />
+		<property name="lib.root.dir" value="${lib.main.dir}" />
+		
+		<antcall target="package" />
+	</target>
+	
+	<target name="deploy-canary">
+		<property name="build.env" value="canary" />
+		<property name="build.mode" value="remote" />
+		<property name="lib.root.dir" value="${lib.main.dir}" />
+		
+		<antcall target="package" />
+	</target>
+
+	<target name="deploy-live">
+		<property name="build.env" value="live" />
+		<property name="build.mode" value="remote" />
+		<property name="lib.root.dir" value="${lib.main.dir}" />
+		
+		<antcall target="package" />
+	</target>
+	
+	<target name="backout-canary">
+		<echo message="Backing out LIVE build. Reverting to previous version." />
+	</target>
+	
+	<target name="backout-live">
+		<echo message="Backing out LIVE build. Reverting to previous version." />
+	</target>
+</project>

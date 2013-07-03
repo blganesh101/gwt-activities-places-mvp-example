@@ -1,0 +1,6 @@
+ivy.repo.root=http://localhost:8080/artifactory/simple/std
+ivy.module.pattern=[organisation]/[module]/[revision]/[module]-[revision]-ivy.xml
+ivy.artifact.pattern=[organisation]/[module]/[revision]/[module]-[revision].[ext]
+ivy.std.repo.realm=Artifactory JCR
+ivy.std.repo.username=mka-developer
+ivy.std.repo.password=$4allofus

@@ -1,0 +1,35 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+		xmlns:g="urn:import:com.google.gwt.user.client.ui"
+		xmlns:b="urn:import:com.github.gwtbootstrap.client.ui">
+	<g:HTMLPanel>
+		<img src="img/dummyland-logo.jpg" />
+
+		<hr/>
+
+		<form action="billing" method="post" class="form-horizontal"
+				id="billingform" accept-charset="utf-8">	
+			<div class="control-group">
+				<label for="username" class="control-label">	
+				Username:
+				</label>
+				<div class="controls">
+					<input name="username" type="text" value="" id="username"/>
+				</div>
+			</div>
+			<div class="control-group">
+				<label for="password" class="control-label">	
+				Password:
+				</label>
+				<div class="controls">
+					<input name="password" type="password" value="" id="password"/>
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="controls">
+					<input type="button" class="btn-danger" value="Login"/>
+				</div>
+			</div>
+		</form>     
+ 	</g:HTMLPanel>
+</ui:UiBinder>

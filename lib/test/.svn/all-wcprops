@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/dummylandapp/!svn/ver/2/trunk/lib/test
+END
+hamcrest-1.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/dummylandapp/!svn/ver/2/trunk/lib/test/hamcrest-1.1.jar
+END
+junit-4.10.jar
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/dummylandapp/!svn/ver/2/trunk/lib/test/junit-4.10.jar
+END

@@ -1,0 +1,113 @@
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/dummylandapp/!svn/ver/2/trunk/lib/main
+END
+mysql-jdbc-5.1.22.jar
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/dummylandapp/!svn/ver/2/trunk/lib/main/mysql-jdbc-5.1.22.jar
+END
+mail-api-1.4.5.jar
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/dummylandapp/!svn/ver/2/trunk/lib/main/mail-api-1.4.5.jar
+END
+slf4j-api-1.7.5.jar
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/dummylandapp/!svn/ver/2/trunk/lib/main/slf4j-api-1.7.5.jar
+END
+logback-classic-1.0.13.jar
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/dummylandapp/!svn/ver/2/trunk/lib/main/logback-classic-1.0.13.jar
+END
+javax-validation-api-1.0.0.jar
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/dummylandapp/!svn/ver/2/trunk/lib/main/javax-validation-api-1.0.0.jar
+END
+mail-pop3-1.4.5.jar
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/dummylandapp/!svn/ver/2/trunk/lib/main/mail-pop3-1.4.5.jar
+END
+logback-core-1.0.13.jar
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/dummylandapp/!svn/ver/2/trunk/lib/main/logback-core-1.0.13.jar
+END
+mail-smtp-1.4.5.jar
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/dummylandapp/!svn/ver/2/trunk/lib/main/mail-smtp-1.4.5.jar
+END
+mail-dsn-1.4.5.jar
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/dummylandapp/!svn/ver/2/trunk/lib/main/mail-dsn-1.4.5.jar
+END
+mail-imap-1.4.5.jar
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/dummylandapp/!svn/ver/2/trunk/lib/main/mail-imap-1.4.5.jar
+END
+gwt-servlet-deps-2.5.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/dummylandapp/!svn/ver/2/trunk/lib/main/gwt-servlet-deps-2.5.1.jar
+END
+gwt-user-2.5.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/dummylandapp/!svn/ver/2/trunk/lib/main/gwt-user-2.5.1.jar
+END
+logback-access-1.0.13.jar
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/dummylandapp/!svn/ver/2/trunk/lib/main/logback-access-1.0.13.jar
+END
+slf4j-simple-1.7.5.jar
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/dummylandapp/!svn/ver/6/trunk/lib/main/slf4j-simple-1.7.5.jar
+END
+hibernate-validator-5.0.0.jar
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/dummylandapp/!svn/ver/2/trunk/lib/main/hibernate-validator-5.0.0.jar
+END
+gwt-servlet-2.5.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/dummylandapp/!svn/ver/2/trunk/lib/main/gwt-servlet-2.5.1.jar
+END
+requestfactory-server-2.5.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/dummylandapp/!svn/ver/2/trunk/lib/main/requestfactory-server-2.5.1.jar
+END
+servlet-api-1.0.jar
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/dummylandapp/!svn/ver/2/trunk/lib/main/servlet-api-1.0.jar
+END

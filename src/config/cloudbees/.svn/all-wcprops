@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/dummylandapp/!svn/ver/2/trunk/src/config/cloudbees
+END
+cloudbees-web.xml
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/dummylandapp/!svn/ver/2/trunk/src/config/cloudbees/cloudbees-web.xml
+END
+cloudbees-web-demo.xml
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/dummylandapp/!svn/ver/2/trunk/src/config/cloudbees/cloudbees-web-demo.xml
+END
+cloudbees-web-local.xml
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/dummylandapp/!svn/ver/2/trunk/src/config/cloudbees/cloudbees-web-local.xml
+END
+cloudbees-web-canary.xml
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/dummylandapp/!svn/ver/2/trunk/src/config/cloudbees/cloudbees-web-canary.xml
+END
+cloudbees-web-live.xml
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/dummylandapp/!svn/ver/2/trunk/src/config/cloudbees/cloudbees-web-live.xml
+END

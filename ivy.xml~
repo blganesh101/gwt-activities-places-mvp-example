@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<ivy-module version="2.0"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">  
+    <info organisation="suruslabs" module="dummylandapp" revision="0.1.0"/>
+    <configurations>
+		<conf name="main" description="provides main dependencies"/>
+		<conf name="test" description="provides testing and analytical dependencies"/>
+		<conf name="buildtime" description="provides dependencies only needed while running a build"/>
+	</configurations>
+    <dependencies>
+        <!-- Main dependencies. -->
+        <dependency org="google/gwt" name="requestfactory-server" rev="2.5.1" conf="main"/>
+        
+        <!-- Remove if you don't need GWT-RPC. -->
+<!--         <dependency org="google/gwt" name="gwt-log" rev="3.2.1" conf="main"/> -->
+        <dependency org="google/gwt" name="gwt-servlet" rev="2.5.1" conf="main"/>
+        <dependency org="google/gwt" name="gwt-bootstrap" rev="2.2.2" conf="main"/>
+        <dependency org="slf4j" name="slf4j-simple" rev="1.7.5" conf="main"/>
+        
+        <dependency org="mysql" name="mysql-jdbc" rev="5.1.22" conf="main"/>
+        <dependency org="oracle/java" name="servlet-api" rev="1.0" conf="main"/>
+        <dependency org="oracle/java" name="mail-api" rev="1.4.5" conf="main"/>
+        
+        <!-- Test dependencies. -->
+        <dependency org="junit" name="junit" rev="4.10" conf="test->*"/>
+        
+        <!-- Buildtime dependencies. -->
+        <dependency org="apache/ant" name="ant-contrib" rev="1.0b3" conf="buildtime->*"/>
+        <dependency org="apache" name="ivy" rev="2.3.0rc2" conf="buildtime->*"/>
+        <dependency org="google/gwt" name="gwt-dev" rev="2.5.1" conf="buildtime->*"/>
+	</dependencies>
+</ivy-module>

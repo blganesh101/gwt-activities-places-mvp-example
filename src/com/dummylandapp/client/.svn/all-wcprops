@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/dummylandapp/!svn/ver/2/trunk/src/com/dummylandapp/client
+END
+GreetingServiceAsync.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/dummylandapp/!svn/ver/2/trunk/src/com/dummylandapp/client/GreetingServiceAsync.java
+END
+WebModule.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/dummylandapp/!svn/ver/2/trunk/src/com/dummylandapp/client/WebModule.java
+END
+GreetingService.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/dummylandapp/!svn/ver/2/trunk/src/com/dummylandapp/client/GreetingService.java
+END

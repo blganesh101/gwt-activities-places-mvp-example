@@ -1,0 +1,20 @@
+<ivysettings>  
+	<properties file="ivy-settings.properties"/>
+    <settings defaultResolver="default-resolver"/>
+    <latest-strategies>
+    	<latest-lexico/>
+    </latest-strategies>
+    <credentials host="${ivy.repo.root}" realm="${ivy.std.repo.realm}"
+        username="${ivy.std.repo.username}" password="${ivy.std.repo.password}"/>
+    <resolvers>  
+        <chain name="default-resolver" returnFirst="true">
+         	<url name="std-repo">
+				<ivy pattern="${ivy.repo.root}/${ivy.module.pattern}"/>
+				<artifact pattern="${ivy.repo.root}/${ivy.artifact.pattern}"/>
+         	</url>
+        </chain>
+    </resolvers>  
+    <modules>
+    	<module organisation="myorg" name="*" resolver="default-resolver"/>
+    </modules>
+</ivysettings>

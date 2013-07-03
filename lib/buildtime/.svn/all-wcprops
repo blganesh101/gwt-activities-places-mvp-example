@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/dummylandapp/!svn/ver/2/trunk/lib/buildtime
+END
+ivy-2.3.0rc2.jar
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/dummylandapp/!svn/ver/2/trunk/lib/buildtime/ivy-2.3.0rc2.jar
+END
+commons-logging-1.0.4.jar
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/dummylandapp/!svn/ver/2/trunk/lib/buildtime/commons-logging-1.0.4.jar
+END
+gwt-dev-2.5.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/dummylandapp/!svn/ver/2/trunk/lib/buildtime/gwt-dev-2.5.1.jar
+END
+gwt-user-2.5.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/dummylandapp/!svn/ver/2/trunk/lib/buildtime/gwt-user-2.5.1.jar
+END
+javax-validation-api-1.0.0.jar
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/dummylandapp/!svn/ver/2/trunk/lib/buildtime/javax-validation-api-1.0.0.jar
+END
+oro-2.0.8.jar
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/dummylandapp/!svn/ver/2/trunk/lib/buildtime/oro-2.0.8.jar
+END
+commons-vfs-1.0.jar
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/dummylandapp/!svn/ver/2/trunk/lib/buildtime/commons-vfs-1.0.jar
+END
+javax-validation-api-sources-1.0.0.jar
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/dummylandapp/!svn/ver/2/trunk/lib/buildtime/javax-validation-api-sources-1.0.0.jar
+END
+commons-codec-1.2.jar
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/dummylandapp/!svn/ver/2/trunk/lib/buildtime/commons-codec-1.2.jar
+END
+commons-httpclient-3.0.jar
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/dummylandapp/!svn/ver/2/trunk/lib/buildtime/commons-httpclient-3.0.jar
+END
+jsch-0.1.31.jar
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/dummylandapp/!svn/ver/2/trunk/lib/buildtime/jsch-0.1.31.jar
+END
